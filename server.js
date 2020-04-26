@@ -1,5 +1,10 @@
 const express = require('express');
+const connectDB = require('./config/db');
+
 const app = express();
+
+//Connect to mongoDB database
+connectDB();
 
 app.get('/api/sample', (req, res) => {
   const sampleData = [
