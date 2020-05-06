@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
 
-//const User = require('../models/User');
+const User = require('../models/User');
 
 // @route   POST /api/users
 // @desc    Register a user
@@ -17,12 +18,29 @@ router.post(
       'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 })
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    res.send('passed');
+    const { name, email, password } = req.body;
+    try {
+      //Check if user already exists
+      let user = await User.findOne({ email });
+      if (user) {
+        return res.status(400).json({ message: 'User already exists' });
+      }
+      //create new instance of user and encrypt the password
+      const salt = await bcrypt.genSalt(10);
+      user = new User({ name, email, password });
+      user.password = await bcrypt.hash(password, salt);
+      //save to the DB
+      await user.save();
+      res.send('User saved');
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+    }
   }
 );
 
