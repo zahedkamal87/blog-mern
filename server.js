@@ -6,6 +6,9 @@ const app = express();
 //Connect to mongoDB database
 connectDB();
 
+//Init Middlewares
+app.use(express.json({ extended: false }));
+
 //Define routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/posts', require('./routes/posts'));
