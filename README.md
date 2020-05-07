@@ -1,8 +1,8 @@
-# Blog Manager App
+# Blog Application
 
 > Full stack MERN blog application with React hooks, context & JWT authentication.
 
-This is the full app.
+This is the full stack application.
 
 ## Usage
 
