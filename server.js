@@ -1,4 +1,7 @@
 const express = require('express');
+const config = require('config');
+const morgan = require('morgan');
+
 const connectDB = require('./config/db');
 
 //Route files
@@ -13,6 +16,11 @@ connectDB();
 
 //Init Middlewares
 app.use(express.json({ extended: false }));
+
+// Dev logging middleware
+if (config.get('NODE_ENV') === 'development') {
+  app.use(morgan('dev'));
+}
 
 //Mount routes
 app.use('/api/auth', auth);
